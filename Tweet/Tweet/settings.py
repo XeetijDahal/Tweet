@@ -56,14 +56,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Tweet.wsgi.application'
 
-# Database (uses DATABASE_URL if provided, else falls back to .env DB vars)
+# # Database (uses DATABASE_URL if provided, else falls back to .env DB vars)
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default=f"postgresql://{config('DB_USER', default='postgres')}:{config('DB_PASSWORD', default='')}"
+#                 f"@{config('DB_HOST', default='localhost')}:{config('DB_PORT', default='5432')}/"
+#                 f"{config('DB_NAME', default='postgres')}",
+#         conn_max_age=600,
+#     )
+# }
+
 DATABASES = {
-    "default": dj_database_url.config(
-        default=f"postgresql://{config('DB_USER', default='postgres')}:{config('DB_PASSWORD', default='')}"
-                f"@{config('DB_HOST', default='localhost')}:{config('DB_PORT', default='5432')}/"
-                f"{config('DB_NAME', default='postgres')}",
-        conn_max_age=600,
-    )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    }
 }
 
 # Password validation
