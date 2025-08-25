@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+  <h2 class="mb-4 text-center">OTP Verification</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="otp" class="form-label">Enter the OTP sent to your email</label>
+      <input type="text" class="form-control" name="otp" required>
+    </div>
+    <button type="submit" class="btn btn-success w-100">Verify</button>
+  </form>
+</div>
+{% endblock %}

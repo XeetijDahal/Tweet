@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Tweet Card -->
+    <div class="card bg-dark text-light" style="max-width: 800px; margin: auto;">
+        {% if tweet.photo %}
+            <img src="{{ tweet.photo.url }}" class="card-img-top" alt="Tweet Image" style="object-fit: cover; height: 300px;">
+        {% endif %}
+        <div class="card-body">
+            <h4 style="color: #90caf9;">posted by: @{{ tweet.user.username }}</h4> 
+            <h5 style="color: #ffcc80;">{{ tweet.title }}</h5>                    
+            <h5 style="color: #a5d6a7;">{{ tweet.gener }}</h5>                     
+            <p class="mb-2" style="text-align: justify; color: #eeeeee;">{{ tweet.text }}</p>
+            <p class="text-muted small" style="color: #b0bec5;">Posted on {{ tweet.created_at|date:"F j, Y, g:i a" }}</p> 
+
+
+            <!-- Reaction (heart) -->
+            <a href="{% url 'tweet_react' tweet.id %}" class="reaction-heart"
+            style="text-decoration:none; font-size: 24px; color: {% if has_reacted %}red{% else %}gray{% endif %};">
+                &#10084;
+                <span>{{ tweet.reactions.count }}</span>
+            </a>
+
+            <!-- Edit/Delete buttons -->
+            {% if tweet.user == user %}
+                <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-warning btn-sm mx-1">Edit</a>
+                <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-danger btn-sm mx-1">Delete</a>
+            {% endif %}
+            <a href="{% url 'tweet_list' %}" class="btn btn-info btn-sm">Back to feed</a>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments mt-5" style="max-width: 800px; margin: auto;">
+        <h5 class="text-light">Comments ({{ comments.count }})</h5>
+
+        {% for comment in comments %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <strong>{{ comment.user.username }}</strong>
+                    <p>{{ comment.text }}</p>
+                    <small class="text-muted">{{ comment.created_at|date:"F j, Y, g:i a" }}</small>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-light">No comments yet. Be the first to comment!</p>
+        {% endfor %}
+
+        <!-- Comment Form -->
+        {% if user.is_authenticated %}
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.text }}
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
+            </form>
+        {% else %}
+            <p class="text-light"><a href="{% url 'login' %}">Login</a> to add a comment.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

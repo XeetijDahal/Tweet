@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Tweets Home Page
+{% endblock %}
+
+{% block content %}
+
+<!-- Bootstrap Icons (if not already included in layout.html) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Optional: Card Hover Style -->
+<style>
+    .card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Remove max-width, let Bootstrap columns handle width */
+    .card {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .btn {
+        white-space: nowrap;
+    }
+</style>
+
+<div class="container mt-4" style="max-width: 1200px;">
+    <h2 class="mb-4">
+        <i class="bi bi-house-door-fill me-2"></i>Home Page
+        {% comment %} <p>User genres: {{ user.profile.gener|join:", " }}</p> {% endcomment %}
+    </h2>
+
+    <a class="btn btn-primary mb-3" href="{% url 'tweet_create' %}">Create New Post</a>
+
+    <div class="row g-3 justify-content-start">
+        {% for tweet in tweets %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
+            <div class="card p-0 shadow-sm rounded w-100" style="height: 100%; overflow: hidden; transition: transform 0.3s;">
+                <a href="{% url 'tweet_detail' tweet.id %}" style="text-decoration: none;">
+                    {% if tweet.photo and tweet.photo.url %}
+                    <div style="width: 100%; height: 180px; overflow: hidden;">
+                        <img src="{{ tweet.photo.url }}"
+                             alt="Tweet Image"
+                             style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    </div>
+                    {% else %}
+                    <div style="width: 100%; height: 180px; overflow: hidden; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                        <span class="text-muted">No Image</span>
+                    </div>
+                    {% endif %}
+                </a>
+
+                <div class="card-body" style="min-height: 170px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        {% if tweet.title %}
+                        <h5 class="card-title">{{ tweet.title|truncatewords:20 }}</h5>
+                        {% endif %}
+                        <h6 class="card-subtitle mb-1 text-muted">@{{ tweet.user.username }}</h6>
+                        <p class="card-text">{{ tweet.text|truncatewords:10 }}</p>
+                    </div>
+                    <a href="{% url 'tweet_detail' tweet.id %}" class="btn btn-sm btn-info w-100 mt-2">Full Post</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock %}

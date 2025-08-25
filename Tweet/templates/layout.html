@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+        {% block title %}
+        Home page
+        {% endblock %}
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <style>
+      .btn-primary {
+        white-space: nowrap;
+      }
+      .btn-no-wrap {
+        white-space: nowrap;
+      }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">VloggyNepal</a>
+
+    <!-- Navbar Toggle for Mobile -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapsible Content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <!-- Left Navigation Links -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+      </ul>
+
+      <!-- Right Buttons (Responsive) -->
+      <div
+        class="d-flex align-items-center gap-2 ms-auto flex-column flex-lg-row"
+      >
+        {% if user.is_authenticated %}
+          <a href="{% url 'my_tweets' %}" class="btn btn-primary w-100 w-lg-auto btn-no-wrap">My Posts</a>
+          <a href="{% url 'change_password' %}" class="btn btn-warning w-100 w-lg-auto btn-no-wrap">Change Password</a>
+          <form method="post" action="{% url 'logout' %}" class="mb-0 w-100 w-lg-auto">
+            {% csrf_token %}
+            
+            <button class="btn btn-danger w-100 w-lg-auto btn-no-wrap" type="submit">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'register' %}" class="btn btn-outline-primary w-100 w-lg-auto btn-no-wrap">Register</a>
+          <a href="{% url 'login' %}" class="btn btn-primary w-100 w-lg-auto btn-no-wrap">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container mt-4">
+  {% block content %}
+  <p>Welcome to home page</p>
+  {% endblock %}
+</div>
+
+{% if messages %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% for message in messages %}
+        Toastify({
+            text: `{{ message|escapejs }}`, // Safe for JS strings
+            duration: 3000,
+            gravity: "bottom",
+            position: "right",
+            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+            close: true
+        }).showToast();
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
+<!-- Toastify JS -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<!-- Bootstrap JS Bundle (with Popper) -->
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-...your-integrity..."
+  crossorigin="anonymous"
+></script>
+
+</body>
+</html>
