@@ -32,7 +32,7 @@ class Tweet(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.TextField(max_length=100)
     text = models.TextField()
-    photo = models.ImageField(upload_to='photos/', blank=True, null=True)
+    photo = models.FileField(upload_to='photos/')
     content=models.TextField()
     gener = MultiSelectField(choices=TOPIC_CHOICES, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
